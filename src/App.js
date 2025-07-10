@@ -29,8 +29,8 @@ function App() {
   const [liveUploadFeedback, setLiveUploadFeedback] = useState([]); // For live feedback during upload
   const [uploading, setUploading] = useState(false); // Track upload state
 
-  const socket = io('http://localhost:5000'); // Connect to backend Socket.IO
   const apiUrl = process.env.REACT_APP_API_URL;
+  const socket = io(apiUrl); // Connect to backend Socket.IO
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -54,7 +54,6 @@ function App() {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('mode', mode); // Add this line
-    formData.append('sid', socket.id); // Send Socket.IO session id
     console.log('Uploading file:', file);
     console.log('FormData:', [...formData.entries()]);
     try {
