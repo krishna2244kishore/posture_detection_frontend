@@ -62,11 +62,16 @@ function App() {
         method: 'POST',
         body: formData,
       });
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error || 'Upload failed');
+      let data;
+      const text = await response.text();
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error('Server returned invalid JSON or empty response.');
       }
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error((data && data.error) || 'Upload failed');
+      }
       setFeedback(data.results.frames);
       setRepCount(data.results.rep_count);
       setAnalysisDone(true);
